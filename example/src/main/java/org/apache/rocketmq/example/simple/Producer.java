@@ -29,13 +29,14 @@ public class Producer {
         producer.setNamesrvAddr("localhost:9876");
         producer.start();
 
-        for (int i = 0; i < 128; i++) {
+        for (int i = 0; i < 1; i++) {
             try {
                 {
-                    Message msg = new Message("TopicTest",
+                    Message msg = new Message("TestTopic",
                         "TagA",
-                        "OrderID188",
+                        "key-x1 key-x2",
                         "Hello world".getBytes(RemotingHelper.DEFAULT_CHARSET));
+
                     SendResult sendResult = producer.send(msg);
                     System.out.printf("%s%n", sendResult);
                 }

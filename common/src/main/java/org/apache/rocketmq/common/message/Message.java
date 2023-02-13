@@ -27,8 +27,10 @@ public class Message implements Serializable {
 
     private String topic;
     private int flag;
+    // review 有哪些系统预先值？
     private Map<String, String> properties;
     private byte[] body;
+    // review 作用？哪里生成的？
     private String transactionId;
 
     public Message() {
@@ -40,15 +42,20 @@ public class Message implements Serializable {
 
     public Message(String topic, String tags, String keys, int flag, byte[] body, boolean waitStoreMsgOK) {
         this.topic = topic;
+        // review 可选值。作用，如何处理？
+        /**
+         * @see org.apache.rocketmq.common.sysflag.MessageSysFlag
+         */
         this.flag = flag;
         this.body = body;
 
         if (tags != null && tags.length() > 0)
             this.setTags(tags);
 
+        // review keys的作用？如何存储
         if (keys != null && keys.length() > 0)
             this.setKeys(keys);
-
+        // review 作用？broker如何处理？
         this.setWaitStoreMsgOK(waitStoreMsgOK);
     }
 

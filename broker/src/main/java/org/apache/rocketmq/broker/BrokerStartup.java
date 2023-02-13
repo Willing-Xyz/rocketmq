@@ -55,12 +55,12 @@ public class BrokerStartup {
     public static InternalLogger log;
 
     public static void main(String[] args) {
+        args = new String[]{"-nlocalhost:9876"};
         start(createBrokerController(args));
     }
 
     public static BrokerController start(BrokerController controller) {
         try {
-
             controller.start();
 
             String tip = "The broker[" + controller.getBrokerConfig().getBrokerName() + ", "

@@ -30,31 +30,35 @@ public class Consumer {
 
     public static void main(String[] args) throws MQClientException {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("please_rename_unique_group_name_3");
+        consumer.setNamesrvAddr("127.0.0.1:9876");
+
 
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
 
         consumer.subscribe("TopicTest", "TagA || TagC || TagD");
+        consumer.setMaxReconsumeTimes(2);
 
         consumer.registerMessageListener(new MessageListenerOrderly() {
             AtomicLong consumeTimes = new AtomicLong(0);
 
             @Override
             public ConsumeOrderlyStatus consumeMessage(List<MessageExt> msgs, ConsumeOrderlyContext context) {
-                context.setAutoCommit(false);
-                System.out.printf("%s Receive New Messages: %s %n", Thread.currentThread().getName(), msgs);
-                this.consumeTimes.incrementAndGet();
-                if ((this.consumeTimes.get() % 2) == 0) {
-                    return ConsumeOrderlyStatus.SUCCESS;
-                } else if ((this.consumeTimes.get() % 3) == 0) {
-                    return ConsumeOrderlyStatus.ROLLBACK;
-                } else if ((this.consumeTimes.get() % 4) == 0) {
-                    return ConsumeOrderlyStatus.COMMIT;
-                } else if ((this.consumeTimes.get() % 5) == 0) {
-                    context.setSuspendCurrentQueueTimeMillis(3000);
-                    return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
-                }
-
-                return ConsumeOrderlyStatus.SUCCESS;
+//                context.setAutoCommit(false);
+                System.out.printf("%s xyz Receive New Messages: %s %n", Thread.currentThread().getName(), msgs);
+                return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
+//                this.consumeTimes.incrementAndGet();
+//                if ((this.consumeTimes.get() % 2) == 0) {
+//                    return ConsumeOrderlyStatus.SUCCESS;
+//                } else if ((this.consumeTimes.get() % 3) == 0) {
+//                    return ConsumeOrderlyStatus.ROLLBACK;
+//                } else if ((this.consumeTimes.get() % 4) == 0) {
+//                    return ConsumeOrderlyStatus.COMMIT;
+//                } else if ((this.consumeTimes.get() % 5) == 0) {
+//                    context.setSuspendCurrentQueueTimeMillis(3000);
+//                    return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
+//                }
+//
+//                return ConsumeOrderlyStatus.SUCCESS;
             }
         });
 
